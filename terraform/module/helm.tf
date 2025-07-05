@@ -188,7 +188,7 @@ resource "helm_release" "argocd" {
   values = [
     yamlencode({
       global = {
-        domain = "argocd.533267198585.realhandsonlabs.net"
+        domain = "argocd.${data.aws_caller_identity.current.account_id}.realhandsonlabs.net"
       }
 
       configs = {
@@ -204,11 +204,11 @@ resource "helm_release" "argocd" {
           annotations = {
             "nginx.ingress.kubernetes.io/force-ssl-redirect" = "true"
             "nginx.ingress.kubernetes.io/backend-protocol"   = "HTTP"
-            "external-dns.alpha.kubernetes.io/hostname"      = "argocd.533267198585.realhandsonlabs.net"
+            "external-dns.alpha.kubernetes.io/hostname"      = "argocd.${data.aws_caller_identity.current.account_id}.realhandsonlabs.net"
           }
           extraTls = [
             {
-              hosts = ["argocd.533267198585.realhandsonlabs.net"]
+              hosts = ["argocd.${data.aws_caller_identity.current.account_id}.realhandsonlabs.net"]
             }
           ]
         }

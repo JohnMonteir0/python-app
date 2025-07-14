@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  push:
+    paths:
+        - src/**
+    branches:
+        - main
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+
+      - 
+        name: Shorten Commit ID
+        shell: bash
+        run: |
+          echo "COMMIT_ID=${GITHUB_SHA::06}" >> "$GITHUB_ENV"
+
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: johnmonteir0/python-app:${{ env.COMMIT_ID }}
+  
+  cd:
+    needs: ci
+    runs-on: ubuntu-latest
+    steps:
+
+      - 
+        name: Install argocd
+        shell: bash
+        run: |
+          curl  -ksSL -o argocd-linux-amd64 https://argocd.654654498256.realhandsonlabs.net/download/argocd-linux-amd64
+          sudo chmod +x argocd
+          sudo mv ./argocd /usr/local/bin/argocd
+
+      - 
+        name: Argocd app sync
+        shell: bash
+        run: |
+          argocd login argocd.654654498256.realhandsonlabs.net \
+           --insecure \
+           --grpc-web \
+           --username admin \
+           --password ${{  secrets.ARGOCD_PASSWORD }}
+          argocd app sync python-app

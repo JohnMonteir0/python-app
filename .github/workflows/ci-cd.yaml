@@ -1,4 +1,4 @@
-name: ci
+name: cicd
 
 on:
   push:
@@ -30,11 +30,29 @@ jobs:
         with:
           push: true
           tags: johnmonteir0/python-app:${{ env.COMMIT_ID }}
-  
+
+    outputs:
+      commit_id: ${{ env.COMMIT_ID }}
   cd:
     needs: ci
     runs-on: ubuntu-latest
     steps:
+
+      - uses: actions/checkout@v3
+
+      - 
+        name: Modify values file
+        shell: bash
+        run: |
+          echo ${{needs.ci.outputs.commit_id}}
+          pip install yq
+          yq -Yi '.image.tag = "${{needs.ci.outputs.commit_id}}' charts/python-app/values.yaml
+      
+      -
+        name: Commit changes
+        uses: Endbug/add-and-commit@v9
+        with:
+          message: 'Updates values.yaml with commit ${{needs.ci.outputs.commit_id}}'
 
       - 
         name: Install argocd

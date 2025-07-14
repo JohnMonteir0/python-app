@@ -1,14 +1,21 @@
-redis-ha:
-  enabled: false
-
-controller:
-  replicas: 1
-
-server:
-  replicas: 1
-
-repoServer:
-  replicas: 1
-
-applicationSet:
-  replicas: 1
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argocd-server-ingress
+  namespace: argocd
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: argocd.654654498256.realhandsonlabs.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: argocd-server
+            port:
+              name: http

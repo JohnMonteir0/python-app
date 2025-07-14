@@ -48,10 +48,10 @@ ingress:
   className: "nginx"
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    external-dns.alpha.kubernetes.io/hostname: "argocd.533267198585.realhandsonlabs.net"
+    external-dns.alpha.kubernetes.io/hostname: "argocd.654654498256.realhandsonlabs.net"
     
   hosts:
-    - host: "python-app.533267198585.realhandsonlabs.net"
+    - host: "python-app.654654498256.realhandsonlabs.net"
       paths:
         - path: /
           pathType: Prefix

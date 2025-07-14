@@ -40,7 +40,7 @@ jobs:
         name: Install argocd
         shell: bash
         run: |
-          curl  -ksSL -o argocd-linux-amd64 https://argocd.654654498256.realhandsonlabs.net/download/argocd-linux-amd64
+          curl  -ksSL -o argocd https://argocd.654654498256.realhandsonlabs.net/download/argocd-linux-amd64
           sudo chmod +x argocd
           sudo mv ./argocd /usr/local/bin/argocd
 
